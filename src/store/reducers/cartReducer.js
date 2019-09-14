@@ -1,6 +1,5 @@
-import { ADD_TO_CART } from '../actions/cartActions';
+import {ADD_TO_CART} from '../actions/cartActions';
 import CartItem from '../../models/cart-item';
-
 
 const initialState = {
   items: {},
@@ -24,13 +23,12 @@ export default (state = initialState, action) => {
           prodTitle,
           state.items[addedProduct.id].sum + prodPrice
         );
-      }
-      else {
+      } else {
         updatedOrNewCartItem = new CartItem(1, prodPrice, prodTitle, prodPrice);
       }
       return {
         ...state,
-        items: { ...state.items, [addedProduct.id]: updatedOrNewCartItem },
+        items: {...state.items, [addedProduct.id]: updatedOrNewCartItem},
         totalAmount: state.totalAmount + prodPrice
       };
   }
