@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, Button } from 'react-native';
+import {View, Text, StyleSheet, Button} from 'react-native';
 
 import CartItem from './CartItem';
 import Colors from '../../constants/Colors';
@@ -11,19 +11,19 @@ const OrderItems = props => {
         <Text style={styles.totalAmount}>${props.amount.toFixed(2)}</Text>
         <Text style={styles.date}>{props.date}</Text>
       </View>
-      <Button color={Colors.primary} title="Show Details" />
+      <Button color={Colors.primary} title='Show Details' />
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
-  orederItem: {
+  orderItem: {
     shadowColor: 'black',
     shadowOpacity: 0.25,
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: {width: 0, height: 2},
     shadowRadius: 8,
-    elevation: 5,
     borderRadius: 10,
+    elevation: 5,
     backgroundColor: 'white',
     margin: 20,
     padding: 10,
@@ -33,7 +33,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    width: '100%'
+    width: '100%',
+    marginVertical: 10
   },
   totalAmount: {
     fontFamily: 'open-sans-bold',
@@ -44,7 +45,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#888'
   }
-
 });
 
 export default OrderItems;
