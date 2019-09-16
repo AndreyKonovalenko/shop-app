@@ -5,6 +5,15 @@ class Order {
     this.totalAmount = totalAmount;
     this.date = date;
   }
+  get readableDate() {
+    return this.date.toLocaleDateString('eb-EN', {
+      year: 'numeric',
+      month: 'long',
+      date: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  }
 }
 
 export default Order;
