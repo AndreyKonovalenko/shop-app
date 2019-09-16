@@ -1,11 +1,11 @@
 import React from 'react';
-import {View, Text, FlatList, StyleSheet, Button} from 'react-native';
-import {useSelector, useDispatch} from 'react-redux';
+import { View, Text, FlatList, StyleSheet, Button } from 'react-native';
+import { useSelector, useDispatch } from 'react-redux';
 
 import Colors from '../../constants/Colors';
 import CartItem from '../../components/shop/CartItem';
 import * as cartActons from '../../store/actions/cartActions';
-import * as ordersActions from '../../store/actions/ordersAction';
+import * as ordersActions from '../../store/actions/ordersActions';
 
 const CartScreen = props => {
   const cartTotalAmount = useSelector(state => state.cart.totalAmount);
@@ -60,6 +60,10 @@ const CartScreen = props => {
   );
 };
 
+CartScreen.navigationOptions = {
+  headerTitle: 'Your Cart'
+}
+
 const styles = StyleSheet.create({
   screen: {
     margin: 20
@@ -72,7 +76,7 @@ const styles = StyleSheet.create({
     padding: 10,
     shadowColor: 'black',
     shadowOpacity: 0.26,
-    shadowOffset: {width: 0, height: 2},
+    shadowOffset: { width: 0, height: 2 },
     shadowRadius: 8,
     elevation: 5,
     borderRadius: 10,
@@ -86,5 +90,6 @@ const styles = StyleSheet.create({
     color: Colors.primary
   }
 });
+
 
 export default CartScreen;

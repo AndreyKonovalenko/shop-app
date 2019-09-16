@@ -1,17 +1,17 @@
 import React from 'react';
-import {FlatList, Platform} from 'react-native';
-import {useSelector, useDispatch} from 'react-redux';
-import {HeaderButtons, Item} from 'react-navigation-header-buttons';
+import { FlatList, Platform } from 'react-native';
+import { useSelector, useDispatch } from 'react-redux';
+import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 
 import * as cartActions from '../../store/actions/cartActions';
 import ProductItem from '../../components/shop/ProductItem';
 import HeaderButton from '../../components/UI/HeaderButton';
 
 const ProductsOverviewScreen = props => {
-  const products = useSelector(state => state.products.availableProducts);
-  const dispatch = useDispatch();
-  return (
-    <FlatList
+const products = useSelector(state => state.products.availableProducts);
+const dispatch = useDispatch();
+return (
+  <FlatList
       data={products}
       keyExtractor={item => item.id}
       renderItem={element => (
@@ -29,14 +29,26 @@ const ProductsOverviewScreen = props => {
             dispatch(cartActions.addToCart(element.item));
           }}
         />
-      )}
-    />
-  );
+)
+}
+/>
+);
 };
 
 ProductsOverviewScreen.navigationOptions = navData => {
   return {
     headerTitle: 'All Products',
+    headerLeft: (
+      <HeaderButtons HeaderButtonComponent={HeaderButton}>
+        <Item
+          title='Menu'
+          iconName={Platform.OS === 'android' ? 'md-menu' : 'ios-menu'}
+          onPress={() => {
+            navData.navigation.toggleDrawer();
+          }}
+        />
+      </HeaderButtons>
+    ),
     headerRight: (
       <HeaderButtons HeaderButtonComponent={HeaderButton}>
         <Item
