@@ -1,7 +1,7 @@
 import React from 'react';
-import { FlatList, Button, Platform } from 'react-native';
-import { useSelector, useDispatch } from 'react-redux';
-import { HeaderButtons, Item } from 'react-navigation-header-buttons';
+import {FlatList, Button, Platform} from 'react-native';
+import {useSelector, useDispatch} from 'react-redux';
+import {HeaderButtons, Item} from 'react-navigation-header-buttons';
 
 import ProductItem from '../../components/shop/ProductItem';
 import HeaderButton from '../../components/UI/HeaderButton';
@@ -9,15 +9,15 @@ import Colors from '../../constants/Colors';
 import * as productsActions from '../../store/actions/productsActions';
 
 const UserProductsScreen = props => {
-    const userProducts = useSelector(state => state.products.userProducts);
-    const dispatch = useDispatch();
+  const userProducts = useSelector(state => state.products.userProducts);
+  const dispatch = useDispatch();
 
-    const editProductHandler = (id) => {
-      props.navigation.navigation('EditProduct', { productId: id });
-    };
+  const editProductHandler = id => {
+    props.navigation.navigate('EditProduct', {productId: id});
+  };
 
-    return (
-        <FlatList
+  return (
+    <FlatList
       data={userProducts}
       keyExtractor={item => item.id}
       renderItem={element => (
@@ -29,8 +29,20 @@ const UserProductsScreen = props => {
             editProductHandler(element.item.id);
           }}
         >
-          <Button color={Colors.primary} title='Edit' onPress={() => {editProductHandler(element.item.id)}} />
-          <Button color={Colors.primary} title='Delete' onPress={() => dispatch(productsActions.deleteProduct(element.item.id))} />
+          <Button
+            color={Colors.primary}
+            title='Edit'
+            onPress={() => {
+              editProductHandler(element.item.id);
+            }}
+          />
+          <Button
+            color={Colors.primary}
+            title='Delete'
+            onPress={() =>
+              dispatch(productsActions.deleteProduct(element.item.id))
+            }
+          />
         </ProductItem>
       )}
     />
@@ -57,7 +69,7 @@ UserProductsScreen.navigationOptions = navData => {
           title='Add'
           iconName={Platform.OS === 'android' ? 'md-create' : 'ios-create'}
           onPress={() => {
-            navData.navigation.navigation('EditProduct');
+            navData.navigation.navigate('EditProduct');
           }}
         />
       </HeaderButtons>

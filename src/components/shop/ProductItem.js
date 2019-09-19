@@ -7,8 +7,7 @@ import {
   TouchableOpacity,
   TouchableNativeFeedback,
   Platform
-}
-from 'react-native';
+} from 'react-native';
 
 const ProductItem = props => {
   let TouchableComponent = TouchableOpacity;
@@ -40,7 +39,7 @@ const styles = StyleSheet.create({
   product: {
     shadowColor: 'black',
     shadowOpacity: 0.25,
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: {width: 0, height: 2},
     shadowRadius: 8,
     elevation: 5,
     borderRadius: 10,
@@ -77,14 +76,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    height: '23%',
-    paddingHorizontal: 20
+    paddingHorizontal: 20,
+    height: '17%'
   },
   details: {
     alignItems: 'center',
-    height: '17%',
     padding: 10,
-    height: '25%'
+    height: '23%'
   }
 });
 
