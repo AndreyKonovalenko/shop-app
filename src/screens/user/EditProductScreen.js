@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import {
   View,
   Text,
@@ -6,10 +6,10 @@ import {
   TextInput,
   StyleSheet,
   Platform,
-}
-from 'react-native';
-import { HeaderButtons, Item } from 'react-navigation-header-buttons';
-import { useSelector, useDispatch } from 'react-redux';
+  Alert
+} from 'react-native';
+import {HeaderButtons, Item} from 'react-navigation-header-buttons';
+import {useSelector, useDispatch} from 'react-redux';
 
 import HeaderButton from '../../components/UI/HeaderButton';
 import * as productsActions from '../../store/actions/productsActions';
@@ -23,6 +23,7 @@ const EditProductScreen = props => {
   const dispatch = useDispatch();
 
   const [title, setTitle] = useState(editedProduct ? editedProduct.title : '');
+  const [titleIsValid, setTitleIsValid] = useState(false);
   const [imageUrl, setImageUrl] = useState(
     editedProduct ? editedProduct.imageUrl : ''
   );
@@ -32,18 +33,41 @@ const EditProductScreen = props => {
   );
 
   const submitHandler = useCallback(() => {
-    if (editedProduct) {
-      dispatch(productsActions.updateProduct(prodId, title, description, imageUrl));
+    if (!titleIsValid) {
+      Alert.alert('Wrong input', 'Please check the errors in the form', [
+        {text: 'Okey'}
+      ]);
+      return;
     }
-    else {
-      dispatch(productsActions.createProduct(title, description, imageUrl, parseFloat(price)))
+    if (editedProduct) {
+      dispatch(
+        productsActions.updateProduct(prodId, title, description, imageUrl)
+      );
+    } else {
+      dispatch(
+        productsActions.createProduct(
+          title,
+          description,
+          imageUrl,
+          parseFloat(price)
+        )
+      );
     }
     props.navigation.goBack();
   }, [dispatch, prodId, title, description, imageUrl, price]);
 
   useEffect(() => {
-    props.navigation.setParams({ submit: submitHandler });
+    props.navigation.setParams({submit: submitHandler});
   }, [submitHandler]);
+
+  const titleChangeHandler = text => {
+    if (text.trim().length === 0) {
+      setTitleIsValid(false);
+    } else {
+      setTitleIsValid(true);
+    }
+    setTitle(text);
+  };
 
   return (
     <ScrollView>
@@ -53,8 +77,15 @@ const EditProductScreen = props => {
           <TextInput
             style={styles.input}
             value={title}
-            onChangeText={text => setTitle(text)}
+            onChangeText={titleChangeHandler}
+            keyboardType='default'
+            autoCapitalize='sentences'
+            autoCorrect
+            returnKeyType='next'
+            onEndEditing={() => console.log('onEndEditing')}
+            onSubmitEditing={() => console.log('onSubmitEditing')}
           />
+          {!titleIsValid && <Text>Please enter a valid title!</Text>}
         </View>
         <View style={styles.formControl}>
           <Text style={styles.label}>Image Url</Text>
@@ -71,6 +102,7 @@ const EditProductScreen = props => {
               style={styles.input}
               value={price}
               onChangeText={text => setPrice(text)}
+              keyboardType='decimal-pad'
             />
           </View>
         )}
@@ -90,8 +122,9 @@ const EditProductScreen = props => {
 EditProductScreen.navigationOptions = navData => {
   const submitFn = navData.navigation.getParam('submit');
   return {
-    headerTitle: navData.navigation.getParam('productId') ?
-      'Edit Product' : 'Add Product',
+    headerTitle: navData.navigation.getParam('productId')
+      ? 'Edit Product'
+      : 'Add Product',
     headerRight: (
       <HeaderButtons HeaderButtonComponent={HeaderButton}>
         <Item

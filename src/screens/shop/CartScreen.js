@@ -1,6 +1,6 @@
 import React from 'react';
-import { View, Text, FlatList, StyleSheet, Button } from 'react-native';
-import { useSelector, useDispatch } from 'react-redux';
+import {View, Text, FlatList, StyleSheet, Button} from 'react-native';
+import {useSelector, useDispatch} from 'react-redux';
 
 import Colors from '../../constants/Colors';
 import CartItem from '../../components/shop/CartItem';
@@ -32,7 +32,9 @@ const CartScreen = props => {
       <Card style={styles.summary}>
         <Text style={styles.summaryText}>
           Total:{' '}
-          <Text style={styles.amount}>${Math.round(cartTotalAmount.toFixed(2)*100)/100}</Text>
+          <Text style={styles.amount}>
+            ${Math.round(cartTotalAmount.toFixed(2) * 100) / 100}
+          </Text>
         </Text>
         <Button
           color={Colors.secondary}
@@ -75,7 +77,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     marginBottom: 20,
-    padding: 10,
+    padding: 10
   },
   summaryText: {
     fontFamily: 'open-sans-bold',

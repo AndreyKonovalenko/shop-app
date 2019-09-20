@@ -1,5 +1,9 @@
 import PRODUCTS from '../../data/dummy-data';
-import { DELETE_PRODUCT, CREATE_PRODUCT, UPDATE_PRODUCT } from '../actions/productsActions';
+import {
+  DELETE_PRODUCT,
+  CREATE_PRODUCT,
+  UPDATE_PRODUCT
+} from '../actions/productsActions';
 
 import Product from '../../models/product';
 
@@ -23,9 +27,11 @@ export default (state = initialState, action) => {
         ...state,
         availableProducts: state.availableProducts.concat(newProduct),
         userProducts: state.userProducts.concat(newProduct)
-      }
+      };
     case UPDATE_PRODUCT:
-      const productIndex = state.userProducts.findIndex(element => element.id === action.pid);
+      const productIndex = state.userProducts.findIndex(
+        element => element.id === action.pid
+      );
       const updateProduct = new Product(
         action.pid,
         state.userProducts[productIndex].ownerId,
@@ -36,19 +42,25 @@ export default (state = initialState, action) => {
       );
       const updateUserProducts = [...state.userProducts];
       updateUserProducts[productIndex] = updateProduct;
-      const availableProductsIndex = state.availableProducts.findIndex(element => element.id === action.pid)
+      const availableProductsIndex = state.availableProducts.findIndex(
+        element => element.id === action.pid
+      );
       const updatedAvailableProducts = [...state.availableProducts];
       updatedAvailableProducts[availableProductsIndex] = updateProduct;
       return {
         ...state,
         availableProducts: updatedAvailableProducts,
         userProducts: updateUserProducts
-      }
+      };
     case DELETE_PRODUCT:
       return {
         ...state,
-        userProducts: state.userProducts.filter(element => element.id !== action.pid),
-        availableProducts: state.availableProducts.filter(element => element.id !== action.pid)
+        userProducts: state.userProducts.filter(
+          element => element.id !== action.pid
+        ),
+        availableProducts: state.availableProducts.filter(
+          element => element.id !== action.pid
+        )
       };
     default:
       return state;
