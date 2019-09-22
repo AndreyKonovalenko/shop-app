@@ -1,12 +1,23 @@
-import React, {useReducer} from 'react';
+import React, {useReducer, useEffect} from 'react';
 import {View, Text, StyleSheet, TextInput} from 'react-native';
 
 const INPUT_CHANGE = 'INPUT_CHANGE';
+const INPUT_BLUR = 'INPUT_BLUR';
 
 const inputReducer = (state, action) => {
   switch (action.type) {
     case INPUT_CHANGE:
-      return;
+      return {
+        ...state,
+        value: action.value,
+        isValid: action.isValid
+      };
+    case INPUT_BLUR: {
+      return {
+        ...state,
+        touched: true
+      };
+    }
     default:
       return state;
   }
@@ -14,10 +25,21 @@ const inputReducer = (state, action) => {
 
 const Input = props => {
   const [inputState, dispatch] = useReducer(inputReducer, {
-    value: props.initialValues ? props.initialValues : '',
+    value: props.initialValue ? props.initialValue : '',
     isValid: props.initialValid,
     touched: false
   });
+  console.log(inputState.isValid);
+  // to avoid infinite loop use object destructuring syntex
+  // so if another props changed we don't refire useEffect
+  const {onInputChange, id} = props;
+
+  useEffect(() => {
+    if (inputState.touched) {
+      onInputChange(id, inputState, inputState.isValid);
+    }
+  }, [inputState, onInputChange, id]);
+
   const textChangeHandler = text => {
     const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     let isValid = true;
@@ -36,8 +58,11 @@ const Input = props => {
     if (props.minLength != null && text.length < props.minLength) {
       isValid = false;
     }
+    dispatch({type: INPUT_CHANGE, value: text, isValid: isValid});
+  };
 
-    dispatch({type: INPUT_CHANGE, value: text});
+  const lostFocusHandler = () => {
+    dispatch({type: INPUT_BLUR});
   };
   return (
     <View style={styles.formControl}>
@@ -45,15 +70,16 @@ const Input = props => {
       <TextInput
         {...props}
         style={styles.input}
-        value={formState.inputValues.title}
+        value={inputState.value}
         onChangeText={textChangeHandler}
+        onBlur={lostFocusHandler}
       />
-      {!formState.inputValidities.title && <Text>{props.errorTexte}</Text>}
+      {!inputState.isValid && <Text>{props.errorText}</Text>}
     </View>
   );
 };
 
-const styels = StyleSheet.create({
+const styles = StyleSheet.create({
   formControl: {
     width: '100%'
   },
