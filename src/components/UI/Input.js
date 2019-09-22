@@ -26,7 +26,7 @@ const inputReducer = (state, action) => {
 const Input = props => {
   const [inputState, dispatch] = useReducer(inputReducer, {
     value: props.initialValue ? props.initialValue : '',
-    isValid: props.initialValid,
+    isValid: props.initiallyValid,
     touched: false
   });
   console.log(inputState.isValid);
@@ -36,7 +36,7 @@ const Input = props => {
 
   useEffect(() => {
     if (inputState.touched) {
-      onInputChange(id, inputState, inputState.isValid);
+      onInputChange(id, inputState.value, inputState.isValid);
     }
   }, [inputState, onInputChange, id]);
 
@@ -74,7 +74,11 @@ const Input = props => {
         onChangeText={textChangeHandler}
         onBlur={lostFocusHandler}
       />
-      {!inputState.isValid && <Text>{props.errorText}</Text>}
+      {!inputState.isValid && inputState.touched && (
+        <View style={styles.errorContainer}>
+          <Text style={styles.errorText}>{props.errorText}</Text>
+        </View>
+      )}
     </View>
   );
 };
@@ -92,6 +96,14 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     borderBottomColor: '#ccc',
     borderBottomWidth: 1
+  },
+  errorContainer: {
+    marginVertical: 5
+  },
+  errorText: {
+    fontFamily: 'open-sans',
+    color: 'red',
+    fontSize: 14
   }
 });
 export default Input;
