@@ -7,14 +7,36 @@ export const deleteProduct = productId => {
 };
 
 export const createProduct = (title, description, imageUrl, price) => {
-  return {
-    type: CREATE_PRODUCT,
-    productData: {
-      title: title,
-      description: description,
-      imageUrl: imageUrl,
-      price: price
-    }
+  // await is modern analog ot .then .catch syntax
+  return async dispatch => {
+    const response = await fetch(
+      'https://shop-app-796f2.firebaseio.com/products.json',
+      {
+        method: 'POST',
+        header: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          title,
+          description,
+          imageUrl,
+          price
+        })
+      }
+    );
+    const resData = await response.json();
+    console.log(resData);
+
+    dispatch({
+      type: CREATE_PRODUCT,
+      productData: {
+        id: resData,
+        title,
+        description,
+        imageUrl,
+        price
+      }
+    });
   };
 };
 

@@ -29,7 +29,6 @@ const Input = props => {
     isValid: props.initiallyValid,
     touched: false
   });
-  console.log(inputState.isValid);
   // to avoid infinite loop use object destructuring syntex
   // so if another props changed we don't refire useEffect
   const {onInputChange, id} = props;

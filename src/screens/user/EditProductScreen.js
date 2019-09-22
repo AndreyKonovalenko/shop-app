@@ -89,7 +89,7 @@ const EditProductScreen = props => {
           formState.inputValues.title,
           formState.inputValues.description,
           formState.inputValues.imageUrl,
-          +formState.inputValues.price.value
+          +formState.inputValues.price
         )
       );
     }
