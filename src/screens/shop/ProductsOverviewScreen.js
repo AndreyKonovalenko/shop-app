@@ -1,30 +1,80 @@
-import React, { useEffect } from 'react';
-import { FlatList, Platform, Button } from 'react-native';
-import { useSelector, useDispatch } from 'react-redux';
-import { HeaderButtons, Item } from 'react-navigation-header-buttons';
+import React, {useState, useEffect, useCallback} from 'react';
+import {
+  FlatList,
+  Platform,
+  Button,
+  ActivityIndicator,
+  View,
+  Text,
+  StyleSheet
+} from 'react-native';
+import {useSelector, useDispatch} from 'react-redux';
+import {HeaderButtons, Item} from 'react-navigation-header-buttons';
 
-import * as productsAction from '../../store/actions/productsActions'
+import * as productsAction from '../../store/actions/productsActions';
 import * as cartActions from '../../store/actions/cartActions';
 import ProductItem from '../../components/shop/ProductItem';
 import HeaderButton from '../../components/UI/HeaderButton';
 import Colors from '../../constants/Colors';
 
 const ProductsOverviewScreen = props => {
-    const products = useSelector(state => state.products.availableProducts);
-    const dispatch = useDispatch();
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState();
+  const products = useSelector(state => state.products.availableProducts);
+  const dispatch = useDispatch();
 
-    useEffect(() => {
-      dispatch(productsAction.fetchProducts());
-    }, [dispatch]);
+  const loadProducts = useCallback(async () => {
+    setError(null);
+    setIsLoading(true);
+    try {
+      await dispatch(productsAction.fetchProducts());
+    } catch (err) {
+      setError(err.message);
+    }
+    setIsLoading(false);
+  }, [dispatch, setIsLoading, setError]);
 
-    const selectItemHendler = (id, title) => {
-      props.navigation.navigate('ProductDetail', {
-        productId: id,
-        productTitle: title
-      });
-    };
+  useEffect(() => {
+    loadProducts();
+  }, [dispatch, loadProducts]);
+
+  const selectItemHendler = (id, title) => {
+    props.navigation.navigate('ProductDetail', {
+      productId: id,
+      productTitle: title
+    });
+  };
+
+  if (error) {
     return (
-        <FlatList
+      <View style={styles.centered}>
+        <Text>An error ocurred!</Text>
+        <Button
+          title='Try again'
+          onPress={loadProducts}
+          color={Colors.primary}
+        />
+      </View>
+    );
+  }
+  if (isLoading) {
+    return (
+      <View style={styles.centered}>
+        <ActivityIndicator size='large' color={Colors.primary} />
+      </View>
+    );
+  }
+
+  if (!isLoading && products.length === 0) {
+    return (
+      <View style={styles.centered}>
+        <Text>No products found. Maybe start adding some!</Text>
+      </View>
+    );
+  }
+
+  return (
+    <FlatList
       data={products}
       keyExtractor={item => item.id}
       renderItem={element => (
@@ -83,5 +133,13 @@ ProductsOverviewScreen.navigationOptions = navData => {
     )
   };
 };
+
+const styles = StyleSheet.create({
+  centered: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
+  }
+});
 
 export default ProductsOverviewScreen;
