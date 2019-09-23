@@ -1,24 +1,30 @@
-import React from 'react';
-import {FlatList, Platform, Button} from 'react-native';
-import {useSelector, useDispatch} from 'react-redux';
-import {HeaderButtons, Item} from 'react-navigation-header-buttons';
+import React, { useEffect } from 'react';
+import { FlatList, Platform, Button } from 'react-native';
+import { useSelector, useDispatch } from 'react-redux';
+import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 
+import * as productsAction from '../../store/actions/productsActions'
 import * as cartActions from '../../store/actions/cartActions';
 import ProductItem from '../../components/shop/ProductItem';
 import HeaderButton from '../../components/UI/HeaderButton';
 import Colors from '../../constants/Colors';
 
 const ProductsOverviewScreen = props => {
-  const products = useSelector(state => state.products.availableProducts);
-  const dispatch = useDispatch();
-  const selectItemHendler = (id, title) => {
-    props.navigation.navigate('ProductDetail', {
-      productId: id,
-      productTitle: title
-    });
-  };
-  return (
-    <FlatList
+    const products = useSelector(state => state.products.availableProducts);
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+      dispatch(productsAction.fetchProducts());
+    }, [dispatch]);
+
+    const selectItemHendler = (id, title) => {
+      props.navigation.navigate('ProductDetail', {
+        productId: id,
+        productTitle: title
+      });
+    };
+    return (
+        <FlatList
       data={products}
       keyExtractor={item => item.id}
       renderItem={element => (
