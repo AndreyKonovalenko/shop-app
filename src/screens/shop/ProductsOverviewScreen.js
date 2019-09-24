@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useCallback} from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   FlatList,
   Platform,
@@ -7,9 +7,10 @@ import {
   View,
   Text,
   StyleSheet
-} from 'react-native';
-import {useSelector, useDispatch} from 'react-redux';
-import {HeaderButtons, Item} from 'react-navigation-header-buttons';
+}
+from 'react-native';
+import { useSelector, useDispatch } from 'react-redux';
+import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 
 import * as productsAction from '../../store/actions/productsActions';
 import * as cartActions from '../../store/actions/cartActions';
@@ -18,36 +19,45 @@ import HeaderButton from '../../components/UI/HeaderButton';
 import Colors from '../../constants/Colors';
 
 const ProductsOverviewScreen = props => {
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState();
-  const products = useSelector(state => state.products.availableProducts);
-  const dispatch = useDispatch();
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState();
+    const products = useSelector(state => state.products.availableProducts);
+    const dispatch = useDispatch();
 
-  const loadProducts = useCallback(async () => {
-    setError(null);
-    setIsLoading(true);
-    try {
-      await dispatch(productsAction.fetchProducts());
-    } catch (err) {
-      setError(err.message);
-    }
-    setIsLoading(false);
-  }, [dispatch, setIsLoading, setError]);
+    const loadProducts = useCallback(async() => {
+      setError(null);
+      setIsLoading(true);
+      try {
+        await dispatch(productsAction.fetchProducts());
+      }
+      catch (err) {
+        setError(err.message);
+      }
+      setIsLoading(false);
+    }, [dispatch, setIsLoading, setError]);
 
-  useEffect(() => {
-    loadProducts();
-  }, [dispatch, loadProducts]);
+    // navigation drawer listner to fetch data from server
+    useEffect(() => {
+      const willFocusSubscription = props.navigation.addListener('willFocus', loadProducts);
+      return () => {
+        willFocusSubscription.remove();
+      };
+    }, [loadProducts]);
 
-  const selectItemHendler = (id, title) => {
-    props.navigation.navigate('ProductDetail', {
-      productId: id,
-      productTitle: title
-    });
-  };
+    useEffect(() => {
+      loadProducts();
+    }, [dispatch, loadProducts]);
 
-  if (error) {
-    return (
-      <View style={styles.centered}>
+    const selectItemHendler = (id, title) => {
+      props.navigation.navigate('ProductDetail', {
+        productId: id,
+        productTitle: title
+      });
+    };
+
+    if (error) {
+      return (
+        <View style={styles.centered}>
         <Text>An error ocurred!</Text>
         <Button
           title='Try again'
@@ -55,26 +65,26 @@ const ProductsOverviewScreen = props => {
           color={Colors.primary}
         />
       </View>
-    );
-  }
-  if (isLoading) {
-    return (
-      <View style={styles.centered}>
+      );
+    }
+    if (isLoading) {
+      return (
+        <View style={styles.centered}>
         <ActivityIndicator size='large' color={Colors.primary} />
       </View>
-    );
-  }
+      );
+    }
 
-  if (!isLoading && products.length === 0) {
-    return (
-      <View style={styles.centered}>
+    if (!isLoading && products.length === 0) {
+      return (
+        <View style={styles.centered}>
         <Text>No products found. Maybe start adding some!</Text>
       </View>
-    );
-  }
+      );
+    }
 
-  return (
-    <FlatList
+    return (
+        <FlatList
       data={products}
       keyExtractor={item => item.id}
       renderItem={element => (
