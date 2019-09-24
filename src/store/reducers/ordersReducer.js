@@ -1,4 +1,4 @@
-import { ADD_ORDER } from '../actions/ordersActions';
+import {ADD_ORDER, SET_ORDERS} from '../actions/ordersActions';
 import Order from '../../models/order';
 
 const intialState = {
@@ -7,6 +7,10 @@ const intialState = {
 
 export default (state = intialState, action) => {
   switch (action.type) {
+    case SET_ORDERS:
+      return {
+        orders: action.orders
+      };
     case ADD_ORDER:
       const newOrder = new Order(
         action.orderData.id,

@@ -4,8 +4,7 @@ import {
   CREATE_PRODUCT,
   UPDATE_PRODUCT,
   SET_PRODUCTS
-}
-from '../actions/productsActions';
+} from '../actions/productsActions';
 
 import Product from '../../models/product';
 
@@ -20,8 +19,10 @@ export default (state = initialState, action) => {
       return {
         ...state,
         availableProducts: action.products,
-        userProducts: action.products.filter(element => element.ownerId === 'u1')
-      }
+        userProducts: action.products.filter(
+          element => element.ownerId === 'u1'
+        )
+      };
     case CREATE_PRODUCT:
       const newProduct = new Product(
         action.productData.id,

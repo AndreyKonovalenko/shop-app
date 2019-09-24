@@ -32,9 +32,8 @@ export const fetchProducts = () => {
         );
       }
 
-      dispatch({ type: SET_PRODUCTS, products: loadedProducts });
-    }
-    catch (err) {
+      dispatch({type: SET_PRODUCTS, products: loadedProducts});
+    } catch (err) {
       // send to custom analytics server
       throw err;
     }
@@ -44,23 +43,25 @@ export const fetchProducts = () => {
 export const deleteProduct = productId => {
   return async dispatch => {
     const response = await fetch(
-      `https://shop-app-796f2.firebaseio.com/products/${productId}.json`, {
+      `https://shop-app-796f2.firebaseio.com/products/${productId}.json`,
+      {
         method: 'DELETE'
-      });
+      }
+    );
 
     if (!response.ok) {
       throw new Error('Something went wrong!');
     }
-    dispatch({ type: DELETE_PRODUCT, pid: productId });
+    dispatch({type: DELETE_PRODUCT, pid: productId});
   };
-
 };
 
 export const createProduct = (title, description, imageUrl, price) => {
   // await is modern analog ot .then .catch syntax
   return async dispatch => {
     const response = await fetch(
-      'https://shop-app-796f2.firebaseio.com/products.json', {
+      'https://shop-app-796f2.firebaseio.com/products.json',
+      {
         method: 'POST',
         header: {
           'Content-Type': 'application/json'
@@ -92,7 +93,8 @@ export const createProduct = (title, description, imageUrl, price) => {
 export const updateProduct = (id, title, description, imageUrl) => {
   return async dispatch => {
     const response = await fetch(
-      `https://shop-app-796f2.firebaseio.com/products/${id}.json`, {
+      `https://shop-app-796f2.firebaseio.com/products/${id}.json`,
+      {
         method: 'PATCH',
         header: {
           'Content-Type': 'application/json'
@@ -100,9 +102,10 @@ export const updateProduct = (id, title, description, imageUrl) => {
         body: JSON.stringify({
           title,
           description,
-          imageUrl,
+          imageUrl
         })
-      });
+      }
+    );
 
     if (!response.ok) {
       throw new Error('Something went wrong!');
