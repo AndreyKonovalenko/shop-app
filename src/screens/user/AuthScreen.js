@@ -1,20 +1,18 @@
-import React, { useState, useReducer, useCallback } from 'react';
+import React, {useState, useReducer, useCallback} from 'react';
 import {
   ScrollView,
   View,
   KeyboardAvoidingView,
   StyleSheet,
   Button
-}
-from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
-import { useDispatch } from 'react-redux';
+} from 'react-native';
+import {LinearGradient} from 'expo-linear-gradient';
+import {useDispatch} from 'react-redux';
 
 import Input from '../../components/UI/Input';
 import Card from '../../components/UI/Card';
 import Colors from '../../constants/Colors';
 import * as authActions from '../../store/actions/authActions';
-
 
 //this is not related to redux, useReducer is build in React
 const FORM_INPUT_UPDATE = 'FORM_INPUT_UPDATE';
@@ -33,7 +31,6 @@ const formReducer = (state, action) => {
     for (const key in updatedValidities) {
       updatedFormIsValid = updatedFormIsValid && updatedValidities[key];
     }
-
     return {
       formIsValid: updatedFormIsValid,
       inputValues: updatedValues,
@@ -46,16 +43,14 @@ const formReducer = (state, action) => {
 const AuthScreen = props => {
   const [isSignup, setIsSignup] = useState(false);
   const dispatch = useDispatch();
-
   const [formState, dispatchFormState] = useReducer(formReducer, {
     inputValues: {
       email: '',
-      password: '',
+      password: ''
     },
     inputValidities: {
       email: false,
       password: false
-
     },
     formIsValid: false
   });
@@ -63,22 +58,30 @@ const AuthScreen = props => {
   const authHandler = () => {
     let action;
     if (isSignup) {
-      action = authActions.signup(formState.inputValues.email, formState.inputValues.password);
+      action = authActions.signup(
+        formState.inputValues.email,
+        formState.inputValues.password
+      );
+    } else {
+      action = authActions.login(
+        formState.inputValues.email,
+        formState.inputValues.password
+      );
     }
-    else {
-      action = authActions.login(formState.inputValues.email, formState.inputValues.password);
-    }
-    dispatch(action)
-  }
+    dispatch(action);
+  };
 
-  const inputChangeHandler = useCallback((inputIdentifier, inputValue, inputValidity) => {
-    dispatchFormState({
-      type: FORM_INPUT_UPDATE,
-      value: inputValue,
-      isValid: inputValidity,
-      inputField: inputIdentifier
-    });
-  }, [dispatchFormState]);
+  const inputChangeHandler = useCallback(
+    (inputIdentifier, inputValue, inputValidity) => {
+      dispatchFormState({
+        type: FORM_INPUT_UPDATE,
+        value: inputValue,
+        isValid: inputValidity,
+        inputField: inputIdentifier
+      });
+    },
+    [dispatchFormState]
+  );
 
   return (
     <KeyboardAvoidingView
@@ -118,12 +121,14 @@ const AuthScreen = props => {
                 color={Colors.primary}
                 onPress={authHandler}
               />
+            </View>
+            <View style={styles.buttonContainer}>
               <Button
-                title={`Switch to ${isSignup ? 'Login': 'Sign Up'}`}
+                title={`Switch to ${isSignup ? 'Login' : 'Sign Up'}`}
                 color={Colors.secondary}
-                onPress={
-                  setIsSignup(prevState => !prevState)
-                }
+                onPress={() => {
+                  setIsSignup(prevState => !prevState);
+                }}
               />
             </View>
           </ScrollView>
