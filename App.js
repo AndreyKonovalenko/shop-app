@@ -9,12 +9,14 @@ import ReduxThunk from 'redux-thunk';
 import productsReducer from './src/store/reducers/productsReducer';
 import cartReducer from './src/store/reducers/cartReducer';
 import ordersReducer from './src/store/reducers/ordersReducer';
+import authReducer from './src/store/reducers/authReducer';
 import ShopNavigator from './src/navigation/ShopNavigator';
 
 const rootReducer = combineReducers({
   products: productsReducer,
   cart: cartReducer,
-  orders: ordersReducer
+  orders: ordersReducer,
+  auth: authReducer
 });
 
 const store = createStore(rootReducer, applyMiddleware(ReduxThunk));
