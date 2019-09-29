@@ -1,7 +1,7 @@
 import {AUTHENTICATE} from '../actions/authActions';
 const inititalState = {
   token: null,
-  useId: null
+  userId: null
 };
 
 export default (state = inititalState, action) => {

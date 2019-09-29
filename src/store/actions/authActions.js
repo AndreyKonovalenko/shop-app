@@ -30,7 +30,6 @@ export const signup = (email, password) => {
       if (errorId === 'EMAIL_EXISTS') {
         message = 'This email exists already!';
       }
-      console.log(errorId);
       throw new Error(message);
     }
     const resData = await response.json();
@@ -75,12 +74,11 @@ export const login = (email, password) => {
     const expirationDate = new Date(
       new Date().getTime() + parseInt(resData.expiresIn) * 1000
     );
-    saveDataToStorage(resData.idToken, resData.loacalId, expirationDate);
+    saveDataToStorage(resData.idToken, resData.localId, expirationDate);
   };
 };
 
 const saveDataToStorage = (token, userId, expirationDate) => {
-  console.log('userData  save!!!');
   AsyncStorage.setItem(
     'userData',
     JSON.stringify({

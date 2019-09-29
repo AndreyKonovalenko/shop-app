@@ -20,8 +20,8 @@ const StartupScreen = props => {
         props.navigation.navigate('Auth');
         return;
       }
-      props.navigation.navigate('Shop');
       console.log('AUTOLOGIN');
+      props.navigation.navigate('Shop');
       dispatch(authActions.authenticate(userId, token));
     };
     tryLogin();
